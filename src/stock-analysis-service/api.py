@@ -95,3 +95,18 @@ async def portfolio(id: int = None, session: Session=Depends(get_session)) -> No
         session.commit()
     else:
         raise HTTPException(status_code=404, detail=f"No holding with id={id}")
+
+@app.put("/portfolio/{id}", response_model=Portfolio)
+async def change_holding(id: int, new_data: PortfolioTransaction, session: Session=Depends(get_session)) -> Portfolio:
+    holding = session.get(Portfolio, id)
+    if holding:
+        holding.Asset = new_data.Asset
+        holding.Equity = new_data.Equity
+        holding.Holding = new_data.Holding
+        holding.Price = new_data.Price
+        holding.Date = new_data.Date
+        holding.Compensation = new_data.Compensation
+        session.commit()
+        return holding
+    else:
+        raise HTTPException(status_code=404, detail=f"No holding with id={id}")
