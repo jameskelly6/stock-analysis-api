@@ -3,13 +3,12 @@ from historical_data import data_to_dict
 import yfinance as yf
 from datetime import datetime
 from portfolio_calculations import pc_roi
-
+import uvicorn
 from sqlmodel import SQLModel, create_engine, Session, select
 
 from scehmas import PortfolioTransaction, PortfolioOutput, Portfolio
 
 app = FastAPI()
-#db = load_db()
 
 engine = create_engine(
     "sqlite:///portfolio.db",
@@ -110,3 +109,7 @@ async def change_holding(id: int, new_data: PortfolioTransaction, session: Sessi
         return holding
     else:
         raise HTTPException(status_code=404, detail=f"No holding with id={id}")
+
+
+if __name__ == "__main__":
+    uvicorn.run("api:app", reload=True)
