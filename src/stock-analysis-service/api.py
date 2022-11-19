@@ -55,16 +55,21 @@ async def get_stock_data(ticker: str = None):
 @app.get("/portfolio")
 async def get_holding(ticker: str | None = None, security: str | None = None, session: Session=Depends(get_session)) -> list:
     query = select(Portfolio)
+    roi_pc = 0
+    roi_gain = 0
     if ticker:
         query=query.where(Portfolio.Equity == ticker)
     if security:
         query=query.where(Portfolio.Asset == security)
     items = session.exec(query).all()
-    if ".L" in items[0].Equity:
-        symbol="£"
-    else:
-        symbol = "$"
-    items.append({"roi_pc": f"{pc_roi(items[0])[0]}%", "roi_gain": f"{symbol}{pc_roi(items[0])[1]}"})
+    for stock in items:
+        if ".L" in stock.Equity:
+            symbol="£"
+        else:
+            symbol = "$"
+        roi_pc = roi_pc + pc_roi(stock)[0]
+        roi_gain = roi_gain + pc_roi(stock)[1]
+    items.append({"Total return %": f"{roi_pc}%", "Total return": f"{symbol}{roi_gain}"})
     return items
         
 
