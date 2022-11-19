@@ -5,6 +5,7 @@ from datetime import datetime
 from portfolio_calculations import pc_roi
 import uvicorn
 from sqlmodel import SQLModel, create_engine, Session, select
+import mysql.connector
 
 from scehmas import PortfolioTransaction, PortfolioOutput, Portfolio
 
@@ -14,6 +15,12 @@ engine = create_engine(
     "sqlite:///portfolio.db",
     connect_args={"check_same_thread": False}, # Needed for SQLite
     echo=True # Log generated SQL
+)
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="yourusername",
+    password="yourpassword"
 )
 
 @app.on_event("startup")
