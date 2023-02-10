@@ -26,3 +26,28 @@ class Portfolio(PortfolioTransaction, table=True):
 
 class PortfolioOutput(PortfolioTransaction):
     id: int
+
+
+class EquityInformation(SQLModel):
+    Equity: str = Field(default=None, foreign_key="portfolio.Equity")
+    Open: float
+    High: float
+    Low: float
+    Close: float    
+    Volume: int
+
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "Equity": "NVDA",
+                "Open": 155.07,
+                "High": 159.61,
+                "Low": 154.72,
+                "Close": 159.09,
+                "Volume": 38410100
+            }
+        }
+
+class Equity(EquityInformation, table=True):
+    equity_id: int | None = Field()

@@ -1,12 +1,12 @@
 from fastapi import HTTPException, Depends, APIRouter
 from portfolio_calculations import pc_roi
-from sqlmodel import SQLModel, Session, select
-from db import engine, get_session
-from scehmas import PortfolioTransaction, PortfolioOutput, Portfolio
+from sqlmodel import Session, select
+from db import get_session
+from scehmas import PortfolioTransaction, Portfolio
 
 router = APIRouter(prefix = "/portfolio")
 
-@app.get("/portfolio")
+@router.get("/")
 async def get_holding(ticker: str | None = None, security: str | None = None, session: Session=Depends(get_session)) -> list:
     query = select(Portfolio)
     roi_pc = 0
@@ -21,13 +21,13 @@ async def get_holding(ticker: str | None = None, security: str | None = None, se
             symbol="£"
         else:
             symbol = "$"
-        roi_pc = roi_pc + pc_roi(stock)[0]
-        roi_gain = roi_gain + pc_roi(stock)[1]
-    items.append({"Total return %": f"{roi_pc}%", "Total return": f"{symbol}{roi_gain}"})
+    #     roi_pc = roi_pc + pc_roi(stock)[0]
+    #     roi_gain = roi_gain + pc_roi(stock)[1]
+    # items.append({"Total return %": f"{roi_pc}%", "Total return": f"{symbol}{roi_gain}"})
     return items
         
 
-@app.get("/portfolio/{id}", response_model=Portfolio)
+@router.get("/{id}", response_model=Portfolio)
 def holding_by_id(id: int, session: Session=Depends(get_session)) -> Portfolio:
     holding = session.get(Portfolio, id)
     if holding:
@@ -36,7 +36,7 @@ def holding_by_id(id: int, session: Session=Depends(get_session)) -> Portfolio:
         raise HTTPException(status_code=404, detail=f"No holding with id={id}")
 
 
-@app.post("/portfolio", response_model=Portfolio)
+@router.post("/", response_model=Portfolio)
 async def add_holding(portfolio_input: PortfolioTransaction, session: Session=Depends(get_session)) -> Portfolio:
     portfolio_input = Portfolio.from_orm(portfolio_input)
     session.add(portfolio_input)
@@ -45,7 +45,7 @@ async def add_holding(portfolio_input: PortfolioTransaction, session: Session=De
     return portfolio_input
     
 
-@app.delete("/portfolio/{id}")
+@router.delete("/{id}")
 async def portfolio(id: int = None, session: Session=Depends(get_session)) -> None:
     holding = session.get(Portfolio, id)
     if holding:
@@ -54,7 +54,7 @@ async def portfolio(id: int = None, session: Session=Depends(get_session)) -> No
     else:
         raise HTTPException(status_code=404, detail=f"No holding with id={id}")
 
-@app.put("/portfolio/{id}", response_model=Portfolio)
+@router.put("/{id}", response_model=Portfolio)
 async def change_holding(id: int, new_data: PortfolioTransaction, session: Session=Depends(get_session)) -> Portfolio:
     holding = session.get(Portfolio, id)
     if holding:

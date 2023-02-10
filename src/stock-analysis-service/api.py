@@ -1,19 +1,12 @@
-from fastapi import FastAPI, HTTPException, Depends
-from portfolio_calculations import pc_roi
+from fastapi import FastAPI
 import uvicorn
-from sqlmodel import SQLModel, Session, select
-import mysql.connector
-from db import engine, get_session
+from sqlmodel import SQLModel
+from db import engine
 from routers import stocks, portfolio
 
 app = FastAPI()
-app.include_router(stocks, portfolio)
-
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="yourusername",
-    password="yourpassword"
-)
+app.include_router(stocks.router)
+app.include_router(portfolio.router)
 
 @app.on_event("startup")
 def on_startup():
