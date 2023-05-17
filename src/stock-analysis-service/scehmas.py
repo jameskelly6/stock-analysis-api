@@ -49,5 +49,5 @@ class EquityInformation(SQLModel):
             }
         }
 
-class Equity(EquityInformation, table=True):
-    equity_id: int or None = Field()
+# class Equity(EquityInformation, table=True):
+#     equity_id: int or None = Field()
