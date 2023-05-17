@@ -7,7 +7,7 @@ from scehmas import PortfolioTransaction, Portfolio
 router = APIRouter(prefix = "/portfolio")
 
 @router.get("/")
-async def get_holding(ticker: str | None = None, security: str | None = None, session: Session=Depends(get_session)) -> list:
+async def get_holding(ticker: str or None = None, security: str or None = None, session: Session=Depends(get_session)) -> list:
     query = select(Portfolio)
     roi_pc = 0
     roi_gain = 0

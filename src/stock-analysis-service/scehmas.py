@@ -22,7 +22,7 @@ class PortfolioTransaction(SQLModel):
         }
 
 class Portfolio(PortfolioTransaction, table=True):
-    id: int | None = Field(primary_key=True, default=None)
+    id: int or None = Field(primary_key=True, default=None)
 
 class PortfolioOutput(PortfolioTransaction):
     id: int
@@ -50,4 +50,4 @@ class EquityInformation(SQLModel):
         }
 
 class Equity(EquityInformation, table=True):
-    equity_id: int | None = Field()
+    equity_id: int or None = Field()

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "stock-analysis-api"
+version = "0.1.0"
+description = "An api for performing some basic portfolio database transactions and requests for company information"
+authors = ["James Kelly"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+sqlmodel = "^0.0.8"
+fastapi = "^0.95.2"
+yfinance = "^0.2.18"
+pandas = "^2.0.1"
+uvicorn = "^0.22.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
